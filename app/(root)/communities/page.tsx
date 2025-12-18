@@ -27,7 +27,20 @@ async function Page({
 
   return (
     <>
-      <h1 className='head-text'>Communities</h1>
+      <div className='flex items-center justify-between'>
+        <h1 className='head-text'>Communities</h1>
+        <a
+          href='/communities/create'
+          className='bg-purple-600 hover:bg-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold transition-colors flex items-center gap-2'
+          style={{ background: '#7c3aed' }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Create Community
+        </a>
+      </div>
 
       <div className='mt-5'>
         <Searchbar routeType='communities' />

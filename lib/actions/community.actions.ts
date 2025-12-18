@@ -14,16 +14,23 @@ export async function createCommunity(
   username: string,
   image: string,
   bio: string,
-  createdById: string // Change the parameter name to reflect it's an id
+  createdById: string,
+  isPrivate: boolean = false
 ) {
   try {
     connectToDB();
+
+    // Check if username already exists
+    const existingCommunity = await Community.findOne({ username });
+    if (existingCommunity) {
+      throw new Error("Username already taken. Please choose another one.");
+    }
 
     // Find the user with the provided unique id
     const user = await User.findOne({ id: createdById });
 
     if (!user) {
-      throw new Error("User not found"); // Handle the case if the user with the id is not found
+      throw new Error("User not found");
     }
 
     const newCommunity = new Community({
@@ -32,7 +39,10 @@ export async function createCommunity(
       username,
       image,
       bio,
-      createdBy: user._id, // Use the mongoose ID of the user
+      createdBy: user._id,
+      admins: [user._id],
+      members: [user._id],
+      isPrivate,
     });
 
     const createdCommunity = await newCommunity.save();
@@ -299,6 +309,176 @@ export async function deleteCommunity(communityId: string) {
     return deletedCommunity;
   } catch (error) {
     console.error("Error deleting community: ", error);
+    throw error;
+  }
+}
+
+export async function joinCommunity(
+  communityId: string,
+  userId: string,
+  path: string
+) {
+  try {
+    connectToDB();
+
+    const community = await Community.findOne({ id: communityId });
+    const user = await User.findOne({ id: userId });
+
+    if (!community || !user) {
+      throw new Error("Community or User not found");
+    }
+
+    // If private, add to join requests instead
+    if (community.isPrivate) {
+      if (!community.joinRequests.includes(user._id)) {
+        community.joinRequests.push(user._id);
+        await community.save();
+      }
+      return { status: "requested" };
+    }
+
+    // If public, add directly to members
+    if (!community.members.includes(user._id)) {
+      community.members.push(user._id);
+      user.communities.push(community._id);
+      
+      await community.save();
+      await user.save();
+    }
+
+    return { status: "joined" };
+  } catch (error) {
+    console.error("Error joining community:", error);
+    throw error;
+  }
+}
+
+export async function leaveCommunity(
+  communityId: string,
+  userId: string,
+  path: string
+) {
+  try {
+    connectToDB();
+
+    const community = await Community.findOne({ id: communityId });
+    const user = await User.findOne({ id: userId });
+
+    if (!community || !user) {
+      throw new Error("Community or User not found");
+    }
+
+    community.members.pull(user._id);
+    user.communities.pull(community._id);
+
+    await community.save();
+    await user.save();
+
+    return { status: "left" };
+  } catch (error) {
+    console.error("Error leaving community:", error);
+    throw error;
+  }
+}
+
+export async function approveJoinRequest(
+  communityId: string,
+  userId: string,
+  approverId: string
+) {
+  try {
+    connectToDB();
+
+    const community = await Community.findOne({ id: communityId });
+    const user = await User.findOne({ id: userId });
+    const approver = await User.findOne({ id: approverId });
+
+    if (!community || !user || !approver) {
+      throw new Error("Community, User, or Approver not found");
+    }
+
+    // Check if approver is admin
+    if (!community.admins.includes(approver._id) && !community.createdBy.equals(approver._id)) {
+      throw new Error("Not authorized to approve requests");
+    }
+
+    // Remove from join requests and add to members
+    community.joinRequests.pull(user._id);
+    community.members.push(user._id);
+    user.communities.push(community._id);
+
+    await community.save();
+    await user.save();
+
+    return { status: "approved" };
+  } catch (error) {
+    console.error("Error approving join request:", error);
+    throw error;
+  }
+}
+
+export async function rejectJoinRequest(
+  communityId: string,
+  userId: string,
+  rejecterId: string
+) {
+  try {
+    connectToDB();
+
+    const community = await Community.findOne({ id: communityId });
+    const rejecter = await User.findOne({ id: rejecterId });
+
+    if (!community || !rejecter) {
+      throw new Error("Community or Rejecter not found");
+    }
+
+    // Check if rejecter is admin
+    if (!community.admins.includes(rejecter._id) && !community.createdBy.equals(rejecter._id)) {
+      throw new Error("Not authorized to reject requests");
+    }
+
+    const userObjectId = await User.findOne({ id: userId }).select("_id");
+    if (userObjectId) {
+      community.joinRequests.pull(userObjectId._id);
+      await community.save();
+    }
+
+    return { status: "rejected" };
+  } catch (error) {
+    console.error("Error rejecting join request:", error);
+    throw error;
+  }
+}
+
+export async function addCommunityAdmin(
+  communityId: string,
+  userId: string,
+  adminId: string
+) {
+  try {
+    connectToDB();
+
+    const community = await Community.findOne({ id: communityId });
+    const user = await User.findOne({ id: userId });
+    const admin = await User.findOne({ id: adminId });
+
+    if (!community || !user || !admin) {
+      throw new Error("Community, User, or Admin not found");
+    }
+
+    // Check if requester is creator
+    if (!community.createdBy.equals(admin._id)) {
+      throw new Error("Only creator can add admins");
+    }
+
+    if (!community.admins.includes(user._id)) {
+      community.admins.push(user._id);
+      await community.save();
+    }
+
+    return { status: "added" };
+  } catch (error) {
+    console.error("Error adding admin:", error);
     throw error;
   }
 }

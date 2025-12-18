@@ -28,6 +28,11 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
       model: Community,
     })
     .populate({
+      path: "likes",
+      model: User,
+      select: "id",
+    })
+    .populate({
       path: "children", // Populate the children field
       populate: {
         path: "author", // Populate the author field within children
@@ -43,9 +48,15 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 
   const posts = await postsQuery.exec();
 
+  // Convert likes to array of user IDs
+  const postsWithLikes = posts.map(post => ({
+    ...post.toObject(),
+    likes: post.likes.map((like: any) => like.id),
+  }));
+
   const isNext = totalPostsCount > skipAmount + posts.length;
 
-  return { posts, isNext };
+  return { posts: postsWithLikes, isNext };
 }
 
 interface Params {
@@ -236,5 +247,45 @@ export async function addCommentToThread(
   } catch (err) {
     console.error("Error while adding comment:", err);
     throw new Error("Unable to add comment");
+  }
+}
+
+export async function likeThread(
+  threadId: string,
+  userId: string,
+  path: string
+) {
+  try {
+    connectToDB();
+
+    const thread = await Thread.findById(threadId);
+
+    if (!thread) {
+      throw new Error("Thread not found");
+    }
+
+    const user = await User.findOne({ id: userId }, { _id: 1 }).lean();
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const likeIndex = thread.likes.findIndex((id: any) => id.toString() === user._id.toString());
+
+    if (likeIndex > -1) {
+      // User has already liked, so unlike
+      thread.likes.splice(likeIndex, 1);
+    } else {
+      // User hasn't liked, so add like
+      thread.likes.push(user._id);
+    }
+
+    await thread.save();
+    revalidatePath(path);
+    
+    return { liked: likeIndex === -1, likeCount: thread.likes.length };
+  } catch (err: any) {
+    console.error("Error while liking thread:", err);
+    throw new Error(`Unable to like thread: ${err.message}`);
   }
 }

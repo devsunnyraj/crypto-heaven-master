@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Dancing_Script } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
@@ -9,8 +9,10 @@ import LeftSidebar from "@/components/shared/LeftSidebar";
 import Bottombar from "@/components/shared/Bottombar";
 import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
+import LoadingIndicator from "@/components/shared/LoadingIndicator";
 
 const inter = Inter({ subsets: ["latin"] });
+const dancingScript = Dancing_Script({ subsets: ["latin"], variable: '--font-dancing' });
 
 export const metadata: Metadata = {
   title: "Crypto Heaven",
@@ -29,7 +31,8 @@ export default function RootLayout({
       }}
     >
       <html lang='en'>
-        <body className={inter.className}>
+        <body className={`${inter.className} ${dancingScript.variable}`}>
+          <LoadingIndicator />
           <Topbar />
 
           <main className='flex flex-row'>

@@ -20,6 +20,12 @@ const communitySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  admins: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   threads: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -32,6 +38,20 @@ const communitySchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  joinRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  isPrivate: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Community =

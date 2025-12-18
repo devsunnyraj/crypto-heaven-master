@@ -3,18 +3,26 @@ import { currentUser } from "@clerk/nextjs";
 import UserCard from "../cards/UserCard";
 
 import { fetchCommunities } from "@/lib/actions/community.actions";
-import { fetchUsers } from "@/lib/actions/user.actions";
+import { fetchUsers, fetchUser } from "@/lib/actions/user.actions";
 
 async function RightSidebar() {
   const user = await currentUser();
   if (!user) return null;
+
+  const userInfo = await fetchUser(user.id);
 
   const similarMinds = await fetchUsers({
     userId: user.id,
     pageSize: 4,
   });
 
-  const suggestedCOmmunities = await fetchCommunities({ pageSize: 4 });
+  const suggestedCOmmunities = await fetchCommunities({ pageSize: 10 });
+  
+  // Filter out communities where user is already a member
+  const userCommunityIds = userInfo?.communities?.map((c: any) => c.id) || [];
+  const filteredCommunities = suggestedCOmmunities.communities
+    .filter((community: any) => !userCommunityIds.includes(community.id))
+    .slice(0, 4);
 
   return (
     <section className='custom-scrollbar rightsidebar'>
@@ -24,9 +32,9 @@ async function RightSidebar() {
         </h3>
 
         <div className='mt-7 flex w-[350px] flex-col gap-9'>
-          {suggestedCOmmunities.communities.length > 0 ? (
+          {filteredCommunities.length > 0 ? (
             <>
-              {suggestedCOmmunities.communities.map((community) => (
+              {filteredCommunities.map((community: any) => (
                 <UserCard
                   key={community.id}
                   id={community.id}
