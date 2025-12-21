@@ -32,6 +32,7 @@ export async function fetchUser(userId: string) {
       image: user.image,
       bio: user.bio,
       onboarded: user.onboarded,
+      threads: user.threads || [],
       communities: (user.communities as any[])?.map((community: any) => ({
         _id: community._id?.toString(),
         id: community.id,

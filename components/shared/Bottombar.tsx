@@ -3,23 +3,27 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 import { sidebarLinks } from "@/constants";
 
 function Bottombar() {
   const pathname = usePathname();
+  const { userId } = useAuth();
 
   return (
     <section className='bottombar'>
       <div className='bottombar_container'>
         {sidebarLinks.map((link) => {
+          const linkRoute = link.route === "/profile" ? `${link.route}/${userId}` : link.route;
+          
           const isActive =
-            (pathname.includes(link.route) && link.route.length > 1) ||
-            pathname === link.route;
+            (pathname.includes(link.route) && link.route.length > 1 && link.route !== "/profile") ||
+            pathname === linkRoute;
 
           return (
             <Link
-              href={link.route}
+              href={linkRoute}
               key={link.label}
               className={`bottombar_link ${isActive && "bg-primary-500"}`}
             >
