@@ -22,6 +22,34 @@ export default function RootLayout({
     <ClerkProvider
       appearance={{
         baseTheme: dark,
+        variables: {
+          colorBackground: '#101012',
+          colorText: '#EFEFEF',
+          colorTextSecondary: '#7C7C8D',
+          colorPrimary: '#877EFF',
+          colorInputBackground: '#1F1F22',
+          colorInputText: '#EFEFEF',
+        },
+        elements: {
+          card: 'bg-dark-2',
+          formButtonPrimary: 'bg-primary-500 hover:bg-primary-500 text-light-1',
+          formFieldInput: 'bg-dark-3 text-light-1',
+          headerTitle: 'text-light-1',
+          headerSubtitle: 'text-light-2',
+          socialButtonsBlockButton: 'bg-dark-3 text-light-1 border-dark-4 hover:bg-dark-4',
+          socialButtonsBlockButtonText: 'text-light-1',
+          dividerLine: 'bg-dark-4',
+          dividerText: 'text-light-3',
+          formFieldLabel: 'text-light-2',
+          formFieldInputShowPasswordButton: 'text-light-2',
+          formHeaderTitle: 'text-light-1',
+          formHeaderSubtitle: 'text-light-2',
+          formResendCodeLink: 'text-primary-500',
+          otpCodeFieldInput: 'bg-dark-3 text-light-1',
+          formFieldAction: 'text-light-2',
+          footerActionLink: 'text-primary-500',
+          footerActionText: 'text-light-2',
+        },
       }}
     >
       <html lang='en'>

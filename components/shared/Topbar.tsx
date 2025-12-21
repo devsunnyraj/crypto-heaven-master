@@ -30,8 +30,29 @@ function Topbar() {
         <OrganizationSwitcher
           appearance={{
             baseTheme: dark,
+            variables: {
+              colorBackground: '#101012',
+              colorText: '#EFEFEF',
+              colorTextSecondary: '#7C7C8D',
+              colorPrimary: '#877EFF',
+              colorInputBackground: '#1F1F22',
+              colorInputText: '#EFEFEF',
+            },
             elements: {
-              organizationSwitcherTrigger: "py-2 px-4",
+              organizationSwitcherTrigger: "py-2 px-4 bg-dark-2 text-light-1",
+              organizationSwitcherTriggerIcon: "text-light-2",
+              organizationPreview: "text-light-1",
+              organizationPreviewTextContainer: "text-light-1",
+              organizationPreviewMainIdentifier: "text-light-1",
+              organizationPreviewSecondaryIdentifier: "text-light-2",
+              organizationSwitcherPopoverCard: "bg-dark-2",
+              organizationSwitcherPopoverActionButton: "text-light-1 hover:bg-dark-2 hover:text-light-1",
+              organizationSwitcherPopoverActionButtonText: "text-light-1",
+              organizationSwitcherPopoverActionButtonIcon: "text-light-2",
+              userPreviewTextContainer: "text-light-1",
+              userPreviewMainIdentifier: "text-light-1",
+              userPreviewSecondaryIdentifier: "text-light-2",
+              avatarBox: "text-light-1",
             },
           }}
         />
