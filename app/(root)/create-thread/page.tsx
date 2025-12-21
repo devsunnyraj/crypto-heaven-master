@@ -4,7 +4,8 @@ import { redirect } from "next/navigation";
 import PostThread from "@/components/forms/PostThread";
 import { fetchUser } from "@/lib/actions/user.actions";
 
-async function Page({ searchParams }: { searchParams: { community?: string } }) {
+async function Page(props: { searchParams: Promise<{ community?: string }> }) {
+  const searchParams = await props.searchParams;
   const user = await currentUser();
   if (!user) return null;
 

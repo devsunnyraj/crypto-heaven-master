@@ -75,9 +75,9 @@ function ThreadCard({
             <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
               <div className='flex gap-3.5 items-center'>
                 <LikeButton 
-                  threadId={id}
-                  currentUserId={currentUserId}
-                  initialLikes={likes}
+                  threadId={id.toString()}
+                  currentUserId={currentUserId?.toString()}
+                  initialLikes={likes.map((like) => like.toString())}
                 />
                 <Link href={`/thread/${id}`}>
                   <Image
