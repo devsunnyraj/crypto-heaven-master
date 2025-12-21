@@ -14,6 +14,8 @@ import LoadingIndicator from "@/components/shared/LoadingIndicator";
 const inter = Inter({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"], variable: '--font-dancing' });
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Crypto Heaven",
   description: "Designed specially for crypto airdrops",
