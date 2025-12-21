@@ -7,6 +7,7 @@ import UserCard from "@/components/cards/UserCard";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import CommunityChat from "@/components/shared/CommunityChat";
 import JoinCommunityButton from "@/components/shared/JoinCommunityButton";
+import DeleteCommunity from "@/components/forms/DeleteCommunity";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
@@ -21,6 +22,7 @@ async function Page(props: { params: Promise<{ id: string }> }) {
 
   const communityDetails = await fetchCommunityDetails(params.id);
   const isMember = communityDetails.members.some((member: any) => member.id === user.id);
+  const isCreator = communityDetails.createdBy.id === user.id;
   
   let messages: any[] = [];
   if (isMember) {
@@ -119,6 +121,13 @@ async function Page(props: { params: Promise<{ id: string }> }) {
                 />
               ))}
             </section>
+            
+            {isCreator && (
+              <DeleteCommunity 
+                communityId={params.id} 
+                communityName={communityDetails.name}
+              />
+            )}
           </TabsContent>
         </Tabs>
       </div>

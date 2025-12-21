@@ -5,6 +5,7 @@ import { FilterQuery, SortOrder } from "mongoose";
 import Community from "../models/community.model";
 import Thread from "../models/thread.model";
 import User from "../models/user.model";
+import Message from "../models/message.model";
 
 import { connectToDB } from "../mongoose";
 
@@ -317,21 +318,24 @@ export async function deleteCommunity(communityId: string) {
       throw new Error("Community not found");
     }
 
+    // Delete all messages associated with the community
+    await Message.deleteMany({ community: deletedCommunity._id });
+
     // Delete all threads associated with the community
-    await Thread.deleteMany({ community: communityId });
+    await Thread.deleteMany({ community: deletedCommunity._id });
 
     // Find all users who are part of the community
-    const communityUsers = await User.find({ communities: communityId });
+    const communityUsers = await User.find({ communities: deletedCommunity._id });
 
     // Remove the community from the 'communities' array for each user
     const updateUserPromises = communityUsers.map((user) => {
-      user.communities.pull(communityId);
+      user.communities.pull(deletedCommunity._id);
       return user.save();
     });
 
     await Promise.all(updateUserPromises);
 
-    return deletedCommunity;
+    return { success: true };
   } catch (error) {
     console.error("Error deleting community: ", error);
     throw error;
