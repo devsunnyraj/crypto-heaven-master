@@ -26,6 +26,7 @@ function UserCard({ id, name, username, imgUrl, personType }: Props) {
             src={imgUrl}
             alt='user_logo'
             fill
+            sizes="48px"
             className='rounded-full object-cover'
           />
         </div>

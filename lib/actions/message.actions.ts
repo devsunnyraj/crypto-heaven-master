@@ -152,8 +152,29 @@ export async function fetchCommunityMessages(communityId: string, pageSize = 50)
     );
 
     const messagesWithLikes = messagesWithReplies.map((msg: any) => ({
-      ...msg,
-      likes: msg.likes?.map((like: any) => like.id) || [],
+      _id: msg._id.toString(),
+      text: msg.text || "",
+      image: msg.image || null,
+      author: msg.author ? {
+        _id: msg.author._id?.toString(),
+        name: msg.author.name,
+        image: msg.author.image,
+        id: msg.author.id,
+      } : null,
+      community: msg.community?.toString() || null,
+      createdAt: msg.createdAt?.toISOString() || new Date().toISOString(),
+      replyTo: msg.replyTo ? {
+        _id: msg.replyTo._id?.toString(),
+        text: msg.replyTo.text || "",
+        author: msg.replyTo.author ? {
+          _id: msg.replyTo.author._id?.toString(),
+          name: msg.replyTo.author.name,
+          id: msg.replyTo.author.id,
+        } : null,
+      } : null,
+      likes: Array.isArray(msg.likes) ? msg.likes.map((like: any) => 
+        typeof like === 'string' ? like : (like?.id || like?._id?.toString())
+      ) : [],
     }));
 
     return messagesWithLikes;

@@ -13,12 +13,34 @@ export async function fetchUser(userId: string) {
   try {
     connectToDB();
 
-    return await User.findOne({ id: userId })
+    const user = await User.findOne({ id: userId })
       .populate({
         path: "communities",
         model: Community,
         select: "_id id name username image bio",
-      });
+      })
+      .lean();
+
+    if (!user) return null;
+
+    // Serialize ObjectIds to strings
+    return {
+      _id: user._id.toString(),
+      id: user.id,
+      username: user.username,
+      name: user.name,
+      image: user.image,
+      bio: user.bio,
+      onboarded: user.onboarded,
+      communities: (user.communities as any[])?.map((community: any) => ({
+        _id: community._id?.toString(),
+        id: community.id,
+        name: community.name,
+        username: community.username,
+        image: community.image,
+        bio: community.bio,
+      })) || [],
+    };
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
   }

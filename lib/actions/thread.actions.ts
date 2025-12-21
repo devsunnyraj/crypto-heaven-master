@@ -22,10 +22,12 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
     .populate({
       path: "author",
       model: User,
+      select: "_id id name image",
     })
     .populate({
       path: "community",
       model: Community,
+      select: "_id id name image",
     })
     .populate({
       path: "likes",
@@ -48,11 +50,48 @@ export async function fetchPosts(pageNumber = 1, pageSize = 20) {
 
   const posts = await postsQuery.exec();
 
-  // Convert likes to array of user IDs
-  const postsWithLikes = posts.map(post => ({
-    ...post.toObject(),
-    likes: post.likes.map((like: any) => like.id),
-  }));
+  // Serialize posts to plain objects
+  const postsWithLikes = posts.map(post => {
+    const postObj = post.toObject();
+    
+    // Debug logging
+    if (!postObj.author?.id) {
+      console.log("⚠️ Post missing author.id:", {
+        postId: postObj._id,
+        authorData: postObj.author
+      });
+    }
+    
+    return {
+      _id: postObj._id.toString(),
+      text: postObj.text,
+      parentId: postObj.parentId?.toString() || null,
+      author: postObj.author ? {
+        _id: postObj.author._id?.toString() || "",
+        id: postObj.author.id || "",
+        name: postObj.author.name || "",
+        image: postObj.author.image || "",
+      } : {
+        _id: "",
+        id: "",
+        name: "Unknown",
+        image: "",
+      },
+      community: postObj.community ? {
+        _id: postObj.community._id?.toString() || "",
+        id: postObj.community.id || "",
+        name: postObj.community.name || "",
+        image: postObj.community.image || "",
+      } : null,
+      createdAt: postObj.createdAt.toISOString(),
+      children: postObj.children?.map((child: any) => ({
+        author: {
+          image: child.author?.image,
+        },
+      })) || [],
+      likes: postObj.likes?.map((like: any) => like.id) || [],
+    };
+  });
 
   const isNext = totalPostsCount > skipAmount + posts.length;
 
@@ -202,9 +241,50 @@ export async function fetchThreadById(threadId: string) {
           },
         ],
       })
-      .exec();
+      .populate({
+        path: "likes",
+        model: User,
+        select: "id",
+      })
+      .lean();
 
-    return thread;
+    if (!thread) return null;
+
+    // Serialize to plain object
+    const serializedThread = {
+      _id: thread._id.toString(),
+      text: thread.text,
+      parentId: thread.parentId?.toString() || null,
+      author: {
+        _id: thread.author._id.toString(),
+        id: thread.author.id,
+        name: thread.author.name,
+        image: thread.author.image,
+      },
+      community: thread.community ? {
+        _id: thread.community._id.toString(),
+        id: thread.community.id,
+        name: thread.community.name,
+        image: thread.community.image,
+      } : null,
+      createdAt: thread.createdAt,
+      children: thread.children?.map((child: any) => ({
+        _id: child._id.toString(),
+        text: child.text,
+        parentId: child.parentId?.toString(),
+        author: {
+          _id: child.author._id.toString(),
+          id: child.author.id,
+          name: child.author.name,
+          image: child.author.image,
+        },
+        createdAt: child.createdAt,
+        children: child.children || [],
+      })) || [],
+      likes: thread.likes?.map((like: any) => like.id) || [],
+    };
+
+    return serializedThread;
   } catch (err) {
     console.error("Error while fetching thread:", err);
     throw new Error("Unable to fetch thread");

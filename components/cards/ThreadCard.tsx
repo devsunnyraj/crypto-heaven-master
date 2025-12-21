@@ -51,11 +51,12 @@ function ThreadCard({
       <div className='flex items-start justify-between'>
         <div className='flex w-full flex-1 flex-row gap-4'>
           <div className='flex flex-col items-center'>
-            <Link href={`/profile/${author.id}`} className='relative h-11 w-11'>
+            <Link href={author.id ? `/profile/${author.id}` : "#"} className='relative h-11 w-11'>
               <Image
                 src={author.image}
                 alt='user_community_image'
                 fill
+                sizes="44px"
                 className='cursor-pointer rounded-full object-cover'
               />
             </Link>
@@ -64,7 +65,7 @@ function ThreadCard({
           </div>
 
           <div className='flex w-full flex-col'>
-            <Link href={`/profile/${author.id}`} className='w-fit'>
+            <Link href={author.id ? `/profile/${author.id}` : "#"} className='w-fit'>
               <h4 className='cursor-pointer text-base-semibold text-light-1'>
                 {author.name}
               </h4>

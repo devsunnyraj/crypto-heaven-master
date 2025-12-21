@@ -70,9 +70,34 @@ export async function fetchCommunityDetails(id: string) {
         model: User,
         select: "name username image _id id",
       },
-    ]);
+    ]).lean();
 
-    return communityDetails;
+    if (!communityDetails) return null;
+
+    // Serialize ObjectIds to strings
+    return {
+      _id: communityDetails._id.toString(),
+      id: communityDetails.id,
+      name: communityDetails.name,
+      username: communityDetails.username,
+      image: communityDetails.image,
+      bio: communityDetails.bio,
+      isPrivate: communityDetails.isPrivate,
+      createdBy: communityDetails.createdBy ? {
+        _id: (communityDetails.createdBy as any)._id?.toString(),
+        id: (communityDetails.createdBy as any).id,
+        name: (communityDetails.createdBy as any).name,
+        username: (communityDetails.createdBy as any).username,
+        image: (communityDetails.createdBy as any).image,
+      } : null,
+      members: (communityDetails.members as any[])?.map((member: any) => ({
+        _id: member._id?.toString(),
+        id: member.id,
+        name: member.name,
+        username: member.username,
+        image: member.image,
+      })) || [],
+    };
   } catch (error) {
     // Handle any errors
     console.error("Error fetching community details:", error);
