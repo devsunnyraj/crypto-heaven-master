@@ -10,6 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { fetchUser } from "@/lib/actions/user.actions";
 
+export const dynamic = 'force-dynamic';
+
 async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const user = await currentUser();

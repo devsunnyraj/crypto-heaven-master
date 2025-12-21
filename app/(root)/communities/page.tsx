@@ -8,6 +8,8 @@ import CommunityCard from "@/components/cards/CommunityCard";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { fetchCommunities } from "@/lib/actions/community.actions";
 
+export const dynamic = 'force-dynamic';
+
 async function Page(props: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {

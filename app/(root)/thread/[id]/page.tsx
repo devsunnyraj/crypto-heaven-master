@@ -8,6 +8,7 @@ import { fetchUser } from "@/lib/actions/user.actions";
 import { fetchThreadById } from "@/lib/actions/thread.actions";
 
 export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 async function page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;

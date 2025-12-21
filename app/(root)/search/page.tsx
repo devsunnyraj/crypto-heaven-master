@@ -7,6 +7,8 @@ import Pagination from "@/components/shared/Pagination";
 
 import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
 
+export const dynamic = 'force-dynamic';
+
 async function Page(props: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {

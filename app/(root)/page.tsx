@@ -7,6 +7,8 @@ import Pagination from "@/components/shared/Pagination";
 import { fetchPosts } from "@/lib/actions/thread.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 
+export const dynamic = 'force-dynamic';
+
 async function Home(props: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {

@@ -12,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 import { fetchCommunityMessages } from "@/lib/actions/message.actions";
 
+export const dynamic = 'force-dynamic';
+
 async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const user = await currentUser();
