@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import { Inter, Dancing_Script } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -32,7 +32,9 @@ export default function RootLayout({
     >
       <html lang='en'>
         <body className={`${inter.className} ${dancingScript.variable}`}>
-          <LoadingIndicator />
+          <Suspense fallback={null}>
+            <LoadingIndicator />
+          </Suspense>
           <Topbar />
 
           <main className='flex flex-row'>
