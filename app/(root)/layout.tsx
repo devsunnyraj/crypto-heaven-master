@@ -34,9 +34,7 @@ export default function RootLayout({
     >
       <html lang='en'>
         <body className={`${inter.className} ${dancingScript.variable}`}>
-          <Suspense fallback={null}>
-            <LoadingIndicator />
-          </Suspense>
+          <LoadingIndicator />
           <Topbar />
 
           <main className='flex flex-row'>
