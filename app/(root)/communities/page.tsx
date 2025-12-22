@@ -32,7 +32,7 @@ async function Page(props: {
         <h1 className='head-text'>Communities</h1>
         <a
           href='/communities/create'
-          className='bg-dark-3 hover:bg-purple-600/20 text-purple-600 p-2 sm:bg-purple-600 sm:hover:bg-purple-700 sm:text-white sm:px-6 sm:py-2.5 rounded-lg text-sm sm:text-base font-semibold transition-colors flex items-center sm:gap-2 border border-purple-600/20 sm:border-0'
+          className='bg-dark-3 hover:dark-3 text-purple-600 p-2 sm:bg-purple-600 sm:hover:bg-purple-700 sm:text-white sm:px-6 sm:py-2.5 rounded-lg text-sm sm:text-base font-semibold transition-colors flex items-center sm:gap-2 border border-purple-600/20 sm:border-0'
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"></line>
