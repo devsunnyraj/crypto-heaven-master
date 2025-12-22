@@ -81,10 +81,24 @@ export default function RootLayout({
       }}
     >
       <html lang='en'>
+        <head>
+          <style dangerouslySetInnerHTML={{__html: `
+            #main-content-wrapper { 
+              opacity: 0 !important; 
+              visibility: hidden !important;
+              transition: opacity 0.1s ease-in-out, visibility 0.1s ease-in-out;
+            }
+            body.content-ready #main-content-wrapper { 
+              opacity: 1 !important; 
+              visibility: visible !important; 
+            }
+          `}} />
+        </head>
         <body className={`${inter.className} ${dancingScript.variable}`}>
           <div id="__next-loading-blocker"></div>
           <WelcomeScreen />
           <LoadingIndicator />
+          <div id="main-content-wrapper">
           <Topbar />
 
           <main className='flex flex-row'>
@@ -97,6 +111,7 @@ export default function RootLayout({
           </main>
 
           <Bottombar />
+          </div>
         </body>
       </html>
     </ClerkProvider>

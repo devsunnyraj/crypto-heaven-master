@@ -19,8 +19,8 @@ export default function WelcomeScreen() {
       // Remove the loading blocker immediately if already seen
       const blocker = document.getElementById('__next-loading-blocker');
       if (blocker) blocker.remove();
-      // Mark body as checked to remove opacity/visibility restrictions
-      document.body.classList.add('welcome-screen-checked');
+      // Mark content as ready to show
+      document.body.classList.add('content-ready');
     }
   }, []);
 
@@ -33,7 +33,7 @@ export default function WelcomeScreen() {
     // Hide if not authenticated
     if (!userId) {
       setShow(false);
-      document.body.classList.add('welcome-screen-checked');
+      document.body.classList.add('content-ready');
       return;
     }
 
@@ -44,21 +44,22 @@ export default function WelcomeScreen() {
       setShow(true);
       sessionStorage.setItem("hasSeenWelcome", "true");
       
-      // Mark body as checked and remove the loading blocker
-      document.body.classList.add('welcome-screen-checked');
+      // Remove the loading blocker - content stays hidden during welcome animation
       const blocker = document.getElementById('__next-loading-blocker');
       if (blocker) blocker.remove();
 
-      // Hide the welcome screen after 4.5 seconds (animation duration)
+      // Hide the welcome screen after animation
       const hideTimer = setTimeout(() => {
         setShow(false);
+        // Show content after welcome screen fades
+        document.body.classList.add('content-ready');
       }, 3000);
 
       return () => clearTimeout(hideTimer);
     } else {
       setShow(false);
-      // Mark body as checked and remove the loading blocker
-      document.body.classList.add('welcome-screen-checked');
+      // Mark content as ready and remove the loading blocker
+      document.body.classList.add('content-ready');
       const blocker = document.getElementById('__next-loading-blocker');
       if (blocker) blocker.remove();
     }
@@ -78,18 +79,6 @@ export default function WelcomeScreen() {
       )}
 
       <style jsx global>{`
-        /* Prevent flash of content on initial load */
-        body:not(.welcome-screen-checked) > div:not(#__next-loading-blocker):not(.welcome-screen-overlay) {
-          opacity: 0 !important;
-          visibility: hidden !important;
-        }
-        
-        ${show ? `
-          body > div:not(.welcome-screen-overlay) {
-            visibility: hidden !important;
-          }
-        ` : ''}
-        
         .welcome-screen-overlay {
           position: fixed;
           top: 0;
