@@ -32,10 +32,9 @@ async function Page(props: {
         <h1 className='head-text'>Communities</h1>
         <a
           href='/communities/create'
-          className='bg-purple-600 hover:bg-purple-700 text-white p-2.5 sm:px-6 sm:py-2.5 rounded-lg text-sm sm:text-base font-semibold transition-colors flex items-center sm:gap-2'
-          style={{ background: '#7c3aed' }}
+          className='bg-purple-600/10 hover:bg-purple-600/20 text-purple-600 p-2 sm:bg-purple-600 sm:hover:bg-purple-700 sm:text-white sm:px-6 sm:py-2.5 rounded-lg text-sm sm:text-base font-semibold transition-colors flex items-center sm:gap-2 border border-purple-600/20 sm:border-0'
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
