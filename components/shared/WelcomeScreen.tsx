@@ -48,14 +48,20 @@ export default function WelcomeScreen() {
       const blocker = document.getElementById('__next-loading-blocker');
       if (blocker) blocker.remove();
 
-      // Hide the welcome screen after animation
+      // Show content before welcome screen starts fading (at 2.4s, just before fadeOut animation)
+      const showContentTimer = setTimeout(() => {
+        document.body.classList.add('content-ready');
+      }, 2400);
+
+      // Hide the welcome screen after animation completes
       const hideTimer = setTimeout(() => {
         setShow(false);
-        // Show content after welcome screen fades
-        document.body.classList.add('content-ready');
       }, 3000);
 
-      return () => clearTimeout(hideTimer);
+      return () => {
+        clearTimeout(showContentTimer);
+        clearTimeout(hideTimer);
+      };
     } else {
       setShow(false);
       // Mark content as ready and remove the loading blocker

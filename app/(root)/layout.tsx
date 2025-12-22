@@ -86,11 +86,12 @@ export default function RootLayout({
             #main-content-wrapper { 
               opacity: 0 !important; 
               visibility: hidden !important;
-              transition: opacity 0.1s ease-in-out, visibility 0.1s ease-in-out;
+              transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s;
             }
             body.content-ready #main-content-wrapper { 
               opacity: 1 !important; 
               visibility: visible !important; 
+              transition: opacity 0.5s ease-in-out, visibility 0s linear 0s;
             }
           `}} />
         </head>
