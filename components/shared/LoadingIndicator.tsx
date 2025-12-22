@@ -2,15 +2,26 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 function LoadingIndicatorContent() {
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { isLoaded } = useAuth();
 
   useEffect(() => {
     setLoading(false);
   }, [pathname, searchParams]);
+
+  // Show loading while auth is initializing
+  useEffect(() => {
+    if (!isLoaded) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [isLoaded]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
