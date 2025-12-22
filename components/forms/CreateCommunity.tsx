@@ -64,7 +64,7 @@ export default function CreateCommunityForm({ userId }: Props) {
       // Create unique ID for community
       const communityId = `community_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-      await createCommunity(
+      const createdCommunity = await createCommunity(
         communityId,
         formData.name,
         formData.username,
@@ -74,7 +74,7 @@ export default function CreateCommunityForm({ userId }: Props) {
         formData.isPrivate
       );
 
-      router.push("/communities");
+      router.push(`/communities/${createdCommunity.id}`);
     } catch (error) {
       console.error("Error creating community:", error);
     } finally {
