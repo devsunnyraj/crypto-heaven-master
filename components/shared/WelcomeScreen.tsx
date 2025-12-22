@@ -6,6 +6,7 @@ import { useAuth } from "@clerk/nextjs";
 export default function WelcomeScreen() {
   const { isLoaded, userId } = useAuth();
   const [show, setShow] = useState(true); // Start as true to prevent homepage flash
+  const [contentReady, setContentReady] = useState(false);
   const [shouldCheck, setShouldCheck] = useState(false);
 
   useEffect(() => {
@@ -16,13 +17,15 @@ export default function WelcomeScreen() {
     const hasSeenWelcome = sessionStorage.getItem("hasSeenWelcome");
     if (hasSeenWelcome) {
       setShow(false);
-      // Remove the loading blocker immediately if already seen
-      const blocker = document.getElementById('__next-loading-blocker');
-      if (blocker) blocker.remove();
-      // Mark content as ready to show
-      document.body.classList.add('content-ready');
+      setContentReady(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (contentReady) {
+      document.body.classList.add('content-ready');
+    }
+  }, [contentReady]);
 
   useEffect(() => {
     if (!shouldCheck) return;
@@ -33,7 +36,7 @@ export default function WelcomeScreen() {
     // Hide if not authenticated
     if (!userId) {
       setShow(false);
-      document.body.classList.add('content-ready');
+      setContentReady(true);
       return;
     }
 
@@ -43,14 +46,10 @@ export default function WelcomeScreen() {
     if (!hasSeenWelcome) {
       setShow(true);
       sessionStorage.setItem("hasSeenWelcome", "true");
-      
-      // Remove the loading blocker - content stays hidden during welcome animation
-      const blocker = document.getElementById('__next-loading-blocker');
-      if (blocker) blocker.remove();
 
       // Show content before welcome screen starts fading (at 2.4s, just before fadeOut animation)
       const showContentTimer = setTimeout(() => {
-        document.body.classList.add('content-ready');
+        setContentReady(true);
       }, 2400);
 
       // Hide the welcome screen after animation completes
@@ -64,10 +63,7 @@ export default function WelcomeScreen() {
       };
     } else {
       setShow(false);
-      // Mark content as ready and remove the loading blocker
-      document.body.classList.add('content-ready');
-      const blocker = document.getElementById('__next-loading-blocker');
-      if (blocker) blocker.remove();
+      setContentReady(true);
     }
   }, [shouldCheck, isLoaded, userId]);
 

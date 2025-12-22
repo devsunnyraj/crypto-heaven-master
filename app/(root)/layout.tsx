@@ -96,7 +96,6 @@ export default function RootLayout({
           `}} />
         </head>
         <body className={`${inter.className} ${dancingScript.variable}`}>
-          <div id="__next-loading-blocker"></div>
           <WelcomeScreen />
           <LoadingIndicator />
           <div id="main-content-wrapper">
