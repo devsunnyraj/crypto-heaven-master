@@ -10,6 +10,7 @@ import Bottombar from "@/components/shared/Bottombar";
 import RightSidebar from "@/components/shared/RightSidebar";
 import Topbar from "@/components/shared/Topbar";
 import LoadingIndicator from "@/components/shared/LoadingIndicator";
+import WelcomeScreen from "@/components/shared/WelcomeScreen";
 
 const inter = Inter({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"], variable: '--font-dancing' });
@@ -81,6 +82,8 @@ export default function RootLayout({
     >
       <html lang='en'>
         <body className={`${inter.className} ${dancingScript.variable}`}>
+          <div id="__next-loading-blocker"></div>
+          <WelcomeScreen />
           <LoadingIndicator />
           <Topbar />
 

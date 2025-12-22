@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Initial page load blocking - removed by WelcomeScreen component */
+#__next-loading-blocker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  z-index: 99998;
+}
+
 /* Global body styling with background */
 body {
   background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)),
