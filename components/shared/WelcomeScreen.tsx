@@ -19,6 +19,8 @@ export default function WelcomeScreen() {
       // Remove the loading blocker immediately if already seen
       const blocker = document.getElementById('__next-loading-blocker');
       if (blocker) blocker.remove();
+      // Mark body as checked to remove opacity/visibility restrictions
+      document.body.classList.add('welcome-screen-checked');
     }
   }, []);
 
@@ -31,6 +33,7 @@ export default function WelcomeScreen() {
     // Hide if not authenticated
     if (!userId) {
       setShow(false);
+      document.body.classList.add('welcome-screen-checked');
       return;
     }
 
@@ -41,7 +44,8 @@ export default function WelcomeScreen() {
       setShow(true);
       sessionStorage.setItem("hasSeenWelcome", "true");
       
-      // Remove the loading blocker now that welcome screen is showing
+      // Mark body as checked and remove the loading blocker
+      document.body.classList.add('welcome-screen-checked');
       const blocker = document.getElementById('__next-loading-blocker');
       if (blocker) blocker.remove();
 
@@ -53,7 +57,8 @@ export default function WelcomeScreen() {
       return () => clearTimeout(hideTimer);
     } else {
       setShow(false);
-      // Remove the loading blocker
+      // Mark body as checked and remove the loading blocker
+      document.body.classList.add('welcome-screen-checked');
       const blocker = document.getElementById('__next-loading-blocker');
       if (blocker) blocker.remove();
     }
@@ -73,6 +78,12 @@ export default function WelcomeScreen() {
       )}
 
       <style jsx global>{`
+        /* Prevent flash of content on initial load */
+        body:not(.welcome-screen-checked) > div:not(#__next-loading-blocker):not(.welcome-screen-overlay) {
+          opacity: 0 !important;
+          visibility: hidden !important;
+        }
+        
         ${show ? `
           body > div:not(.welcome-screen-overlay) {
             visibility: hidden !important;
