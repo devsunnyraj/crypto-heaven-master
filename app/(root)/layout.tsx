@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "Crypto Heaven",
-  description: "Designed specially for crypto airdrops",
+  description: "Community app for crypto enthusiasts."
 };
 
 export default function RootLayout({
